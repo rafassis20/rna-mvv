@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNA Group — Missão · Visão · Valores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#131316;--bg2:#1a1a1e;--cream:#F3EEE2;--muted:#9a978f;
+    --sage:#A3B18A;--sage-dim:#7d8a68;--gold:#C9A961;--line:#2a2a30;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:radial-gradient(125% 125% at 78% 8%, #18181f 0%, var(--bg) 52%);color:var(--cream);font-family:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:300;overflow:hidden;-webkit-font-smoothing:antialiased}
+  #progress{position:fixed;top:0;left:0;height:3px;background:var(--sage);width:0;z-index:50;transition:width .35s cubic-bezier(.4,0,.2,1)}
+  .deck{height:100vh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:7vh 9vw;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+  .slide.active{opacity:1;visibility:visible}
+  .slide > *{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.2,.7,.2,1),transform .65s cubic-bezier(.2,.7,.2,1)}
+  .slide.active > *{opacity:1;transform:translateY(0)}
+  .slide.active > *:nth-child(1){transition-delay:.10s}
+  .slide.active > *:nth-child(2){transition-delay:.20s}
+  .slide.active > *:nth-child(3){transition-delay:.30s}
+  .slide.active > *:nth-child(4){transition-delay:.40s}
+  .slide.active > *:nth-child(5){transition-delay:.48s}
+  .meta{position:fixed;bottom:3.2vh;left:9vw;right:9vw;display:flex;justify-content:space-between;align-items:center;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500;z-index:40}
+  .meta .brand{color:var(--sage)}.meta .brand b{color:var(--cream);font-weight:600}
+  .kicker{color:var(--sage);font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:.82rem;margin-bottom:2.4vh}
+  h1{font-weight:700;line-height:1.02;letter-spacing:-.02em}
+  .xxl{font-size:clamp(2.6rem,7vw,6rem)}
+  .xl{font-size:clamp(2rem,5vw,4rem)}
+  .lg{font-size:clamp(1.5rem,3.4vw,2.8rem)}
+  .lead{font-size:clamp(1.05rem,1.9vw,1.7rem);font-weight:300;color:var(--muted);line-height:1.5;max-width:62ch;margin-top:3vh}
+  .lead b{color:var(--cream);font-weight:500}
+  .gold{color:var(--gold)}.sage{color:var(--sage)}
+  .dot{width:14px;height:14px;border-radius:50%;background:var(--sage);display:inline-block;margin-bottom:5vh;box-shadow:0 0 24px var(--sage)}
+  .tese{font-size:clamp(1.5rem,3.6vw,2.9rem);font-weight:600;line-height:1.18;letter-spacing:-.02em;max-width:24ch}
+  .tese .gold{color:var(--gold)}
+  .guide{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;margin-top:4.5vh}
+  .guide .g{border:1px solid var(--line);border-radius:14px;padding:3vh 1.6vw;background:linear-gradient(160deg,var(--bg2),transparent)}
+  .guide .g .h{color:var(--gold);font-weight:700;font-size:1.1rem;margin-bottom:1vh}
+  .guide .g p{color:var(--muted);font-size:.95rem;line-height:1.45}
+  .guide .g p b{color:var(--cream);font-weight:500}
+  .mtext{font-size:clamp(1.3rem,3vw,2.4rem);font-weight:600;line-height:1.2;margin-bottom:1vh}
+  .mtext .lbl{color:var(--sage);font-weight:500;font-size:.5em;letter-spacing:.06em}
+  .seq{display:flex;gap:1.2vw;margin-top:5vh;flex-wrap:wrap}
+  .seq .s{flex:1;min-width:220px;border:1px solid var(--line);border-radius:14px;padding:3vh 1.6vw;background:linear-gradient(160deg,var(--bg2),transparent)}
+  .seq .s .n{color:var(--sage);font-weight:700;font-size:.82rem;letter-spacing:.2em;margin-bottom:1.4vh}
+  .seq .s h3{font-weight:600;font-size:clamp(1.05rem,1.7vw,1.4rem);margin-bottom:.8vh;color:var(--cream)}
+  .seq .s p{color:var(--muted);font-size:.92rem;font-weight:300;line-height:1.45}
+  .seq .s.fin{border-color:var(--gold)}
+  .grid{display:grid;gap:1.4vw;margin-top:4vh}
+  .grid.c3{grid-template-columns:repeat(3,1fr)}
+  .card{border:1px solid var(--line);border-radius:14px;padding:3vh 1.6vw;background:linear-gradient(160deg,var(--bg2),transparent)}
+  .card .t{font-weight:600;font-size:clamp(1.05rem,1.7vw,1.4rem);color:var(--cream);margin-bottom:1.2vh}
+  .card .d{color:var(--muted);font-size:.95rem;font-weight:300;line-height:1.5}
+  .card.dim{border-style:dashed}
+  .value{flex-direction:row;align-items:center;gap:5vw}
+  .value .idx{font-weight:800;font-size:clamp(7rem,22vw,20rem);line-height:.8;color:var(--gold);opacity:.92;letter-spacing:-.04em;flex:none}
+  .value .body{max-width:34ch}
+  .value .vname{font-weight:700;font-size:clamp(1.8rem,4.6vw,3.8rem);line-height:1.04;letter-spacing:-.02em;color:var(--cream)}
+  .value .vname .accent{color:var(--gold)}
+  .value .vdesc{font-size:clamp(1.05rem,1.7vw,1.5rem);font-weight:300;color:var(--muted);line-height:1.5;margin-top:3vh}
+  .value .vdesc b{color:var(--cream);font-weight:500}
+  .vindex{display:flex;flex-direction:column;gap:.1vh;margin-top:3.5vh;max-width:80ch}
+  .vindex .it{display:flex;gap:1em;align-items:baseline;padding:1.7vh 0;border-bottom:1px solid var(--line);font-size:clamp(1.15rem,2.1vw,1.7rem);font-weight:500;color:var(--cream)}
+  .vindex .it .n{color:var(--gold);font-weight:700;font-size:.9em;flex:none;width:1.6em}
+  .tests{display:flex;flex-direction:column;gap:2vh;margin-top:4vh;max-width:62ch}
+  .tests .q{border-left:3px solid var(--gold);padding:1.4vh 0 1.4vh 2vw;font-size:clamp(1.05rem,1.9vw,1.5rem);font-weight:400;color:var(--cream)}
+  .tests .q span{color:var(--muted);font-size:.88em;font-weight:300}
+  #hint{position:fixed;bottom:3.2vh;left:50%;transform:translateX(-50%);color:var(--line);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;z-index:40;transition:opacity .4s}
+  @media(max-width:760px){.guide,.grid.c3,.seq{grid-template-columns:1fr;flex-direction:column}.value{flex-direction:column;align-items:flex-start;gap:1vh;justify-content:center}.value .idx{font-size:7rem}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 COVER -->
+  <section class="slide">
+    <span class="dot"></span>
+    <div class="kicker">RNA Group</div>
+    <h1 class="xxl">Missão · Visão<br><span class="gold">· Valores</span></h1>
+    <p class="lead">Quem somos, pra onde vamos e como a gente joga.</p>
+  </section>
+
+  <!-- 2 HOW TO READ -->
+  <section class="slide">
+    <div class="kicker">Como ler</div>
+    <h1 class="lg">Três coisas diferentes.</h1>
+    <div class="guide">
+      <div class="g"><div class="h">🎯 A tese</div><p>O resumo de tudo. <b>O que construímos</b> e por quê.</p></div>
+      <div class="g"><div class="h">🏔 Visão</div><p>A montanha. <b>Onde vamos chegar</b> — tem prazo e placar.</p></div>
+      <div class="g"><div class="h">⚔️ Valores</div><p>As regras do jogo. <b>Como nos comportamos</b> — inegociável.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 TESE -->
+  <section class="slide">
+    <div class="kicker">A tese, o resumo de tudo</div>
+    <div class="tese">We build <span class="gold">AI-native</span> brands that blend technology and humanity to make people's lives better.</div>
+    <p class="lead">Construímos marcas com <span class="sage">AI</span> que melhoram o dia a dia das pessoas.</p>
+  </section>
+
+  <!-- 5 VISION -->
+  <section class="slide">
+    <div class="kicker">🏔 Visão · onde vamos chegar</div>
+    <h1 class="lg">O primeiro grupo global de marcas <span class="gold">AI-native</span> da história, avaliado em mais de <span class="gold">US$ 1 bilhão</span> em <span class="gold">2032</span>.</h1>
+  </section>
+
+  <!-- 7 VALUES INTRO -->
+  <section class="slide">
+    <div class="kicker">⚔️ Valores · as regras do jogo</div>
+    <h1 class="xl">Sete regras. <span class="gold">Inegociáveis.</span></h1>
+    <p class="lead">Não são pôster na parede. São critério de <b>contratação, promoção e demissão</b> — e o contexto que damos pra IA operar do nosso jeito.</p>
+  </section>
+
+  <!-- 01 -->
+  <section class="slide value">
+    <div class="idx">01</div>
+    <div class="body">
+      <div class="vname">Grit com <span class="accent">inteligência</span>.</div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="slide value">
+    <div class="idx">02</div>
+    <div class="body">
+      <div class="vname">O <span class="accent">tempo</span> é a moeda mais valiosa.</div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="slide value">
+    <div class="idx">03</div>
+    <div class="body">
+      <div class="vname"><span class="accent">Mudar</span> e evoluir sempre.</div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="slide value">
+    <div class="idx">04</div>
+    <div class="body">
+      <div class="vname"><span class="accent">Transparência</span> e honestidade.</div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="slide value">
+    <div class="idx">05</div>
+    <div class="body">
+      <div class="vname">Tudo é simples, nada é <span class="accent">impossível</span>.</div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="slide value">
+    <div class="idx">06</div>
+    <div class="body">
+      <div class="vname"><span class="accent">Diversão</span> fazendo o mundo melhor.</div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="slide value">
+    <div class="idx">07</div>
+    <div class="body">
+      <div class="vname">Responsabilidade <span class="accent">extrema</span>.</div>
+    </div>
+  </section>
+
+  <!-- RECAP -->
+  <section class="slide">
+    <div class="kicker">As 7 regras, de cabeça</div>
+    <div class="vindex">
+      <div class="it"><span class="n">01</span> Grit com inteligência</div>
+      <div class="it"><span class="n">02</span> O tempo é a moeda mais valiosa</div>
+      <div class="it"><span class="n">03</span> Mudar e evoluir sempre</div>
+      <div class="it"><span class="n">04</span> Transparência e honestidade</div>
+      <div class="it"><span class="n">05</span> Tudo é simples, nada é impossível</div>
+      <div class="it"><span class="n">06</span> Diversão fazendo o mundo melhor</div>
+      <div class="it"><span class="n">07</span> Responsabilidade extrema</div>
+    </div>
+  </section>
+
+  <!-- TEST -->
+  <section class="slide">
+    <div class="kicker">O que torna isto um valor — e não um pôster</div>
+    <h1 class="lg">Valor só vale com <span class="gold">comportamento comprovado</span>.</h1>
+    <div class="tests">
+      <div class="q">Tem ação real do último mês que prova isso? <span>Se não tem, não é valor — ou a gente muda o comportamento.</span></div>
+      <div class="q">Demitiríamos um top performer por violar isso? <span>Se não, não é inegociável.</span></div>
+      <div class="q">Manteríamos mesmo custando dinheiro? <span>Valor é o que segura quando aperta.</span></div>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="slide">
+    <span class="dot"></span>
+    <h1 class="xl">Quando o jogo aperta,<br>os <span class="gold">valores ganham</span>.</h1>
+    <p class="lead">O bilhão é placar, não propósito. É isto que nos torna a empresa que somos — não o tamanho do placar.</p>
+  </section>
+
+</div>
+
+<div class="meta">
+  <span class="brand"><b>RNA</b> <span id="sec">Group · MVV</span></span>
+  <span id="counter">01 / 16</span>
+</div>
+<div id="hint">← → para navegar · F para tela cheia</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const counter=document.getElementById('counter');
+  const progress=document.getElementById('progress');
+  const hint=document.getElementById('hint');
+  const sec=document.getElementById('sec');
+  const SECS=["Group · MVV","Como ler","A tese","Visão","Valores","Valores","Valores","Valores","Valores","Valores","Valores","Valores","Valores","Valores","Group · MVV"];
+  let i=0;
+  const pad=n=>String(n).padStart(2,'0');
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    counter.textContent=pad(i+1)+' / '+pad(slides.length);
+    if(sec)sec.textContent=SECS[i]||'Group · MVV';
+    progress.style.width=((i)/(slides.length-1)*100)+'%';
+  }
+  function next(){show(i+1)} function prev(){show(i-1)}
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();next();}
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();prev();}
+    else if(e.key==='Home'){show(0)} else if(e.key==='End'){show(slides.length-1)}
+    else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.();}else{document.exitFullscreen?.();}}
+    hint.style.opacity='0';
+  });
+  document.getElementById('deck').addEventListener('click',e=>{(e.clientX > window.innerWidth*0.35)?next():prev();hint.style.opacity='0';});
+  let tx=0;
+  addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+  addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){dx<0?next():prev();}},{passive:true});
+  show(0);
+  setTimeout(()=>{hint.style.opacity='0'},6000);
+</script>
+</body>
+</html>
